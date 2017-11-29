@@ -5,3 +5,6 @@
  * @version $Id$
  */
 
+import G from './src/global'
+
+let _G = new G()

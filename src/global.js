@@ -5,3 +5,8 @@
  * @version $Id$
  */
 
+export default class G {
+	constructor() {
+		console.log('runing')
+	}
+}
