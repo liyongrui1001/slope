@@ -1,12 +1,11 @@
 /**
- * 
- * @authors Your Name (you@example.org)
- * @date    2017-11-29 22:50:09
+ * @authors hgcoder (you@example.org)
  * @version $Id$
  */
 
-export default class G {
-	constructor() {
-		console.log('runing')
-	}
+import circle from './shapes/circle'
+export default class {
+  constructor () {
+    console.log('runing')
+  }
 }

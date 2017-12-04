@@ -19,15 +19,15 @@ module.exports = {
 	},
 	module: {
     rules: [
-    	// {
-     //    test: /\.js$/,
-     //    loader: 'eslint-loader',
-     //    enforce: 'pre',
-     //    include: [resolve('src')],
-     //    options: {
-     //      formatter: require('eslint-friendly-formatter')
-     //    }
-     //  },
+    	{
+        test: /\.js$/,
+        loader: 'eslint-loader',
+        enforce: 'pre',
+        include: [resolve('src')],
+        options: {
+          formatter: require('eslint-friendly-formatter')
+        }
+      },
       {
         test: /\.js$/,
         // exclude: /(node_modules|bower_components)/,
@@ -54,6 +54,9 @@ module.exports = {
   },
   plugins: [
   	new webpack.DefinePlugin({}),
+    new webpack.ProvidePlugin({
+      d3:'d3'
+    }),
   	new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
