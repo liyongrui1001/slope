@@ -15,9 +15,10 @@
  * offset.endX(Num) 线结束点位置偏移量 要求inversion值为true
  * offset.textLocation 字体在左右标志
  */
-import { d3 } from 'd3'
+
 export default class commonArc {
   constructor (props) {
+    console.log(d3)
     this._w = props.width
     this._h = props.height
     this.arc2pieData = props.data
@@ -25,9 +26,11 @@ export default class commonArc {
     this.color = props.color || ['#acdafd', '#dcb364']
     this.variedConf = props.variedConf
     this.lineConf = props.lineConf
+    this.init()
   }
   init () {
     // 画布位置
+
     let _this = this
     this.svg = d3.select(this._box)
       .append('svg')
@@ -116,13 +119,13 @@ export default class commonArc {
             .attr('stroke-width', '1px')
             .attr('stroke', '#95c6ed')
             .attr('fill', 'none')
-          // 点
+            // 点
           arc2GBox.append('circle')
             .attr('cx', endX)
             .attr('cy', endY)
             .attr('r', 5)
             .attr('fill', '#95c6ed')
-          // 文案
+            // 文案
           let textOffset = 0
           if (addProperty.offset && addProperty.offset.textLocation === 'right') {
             // textOffset = ( endX+addProperty.offset.endX || endX) + 95;

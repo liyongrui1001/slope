@@ -49,13 +49,20 @@ module.exports = {
             ]
           }
         }
-      }
+      },
+      // {
+      //   test: require.resolve('d3'),
+      //   use: [{
+      //     loader: 'expose-loader',
+      //     options: 'd3'
+      //   }]
+      // }
     ]
   },
   plugins: [
   	new webpack.DefinePlugin({}),
     new webpack.ProvidePlugin({
-      d3:'d3'
+        d3: "d3"
     }),
   	new HtmlWebpackPlugin({
       filename: 'index.html',

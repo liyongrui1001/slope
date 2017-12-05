@@ -3,9 +3,9 @@
  * @version $Id$
  */
 
-import circle from './shapes/circle'
+import Circle from './shapes/circle'
 export default class {
   constructor () {
-    console.log('runing')
+    new Circle()
   }
 }
