@@ -12,7 +12,7 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const notifier = require('node-notifier')
 const portfinder = require('portfinder')
 let webpackDevCof = merge(webpackConfig, {
-	devtool: 'cheap-source-map',
+	devtool: 'source-map',
 	devServer: {
 		clientLogLevel: 'warning',
 		historyApiFallback: true,
@@ -53,7 +53,7 @@ module.exports = new Promise((resolve, reject) => {
       // Add FriendlyErrorsPlugin
       webpackDevCof.plugins.push(new FriendlyErrorsPlugin({
         compilationSuccessInfo: {
-          messages: [`服务启动成功: http://location:${port}`],
+          messages: [`服务启动成功: http://localhost:${port}`],
         },
         onErrors: _onErrors()
       }))
@@ -61,19 +61,3 @@ module.exports = new Promise((resolve, reject) => {
     }
   })
 })
-return 
-// new Promise((resolve, reject) => {
-			portfinder.getPort((err, port) => {
-				if (err) {
-					reject(err)
-				} else {
-					webpackDevCof.devServer.port = port
-					webpackDevCof.plugins.push(new FriendlyErrorsPlugin({
-						compilationSuccessInfo: {
-							messages: [`服务启动: http://localhost:${port}`],
-						},
-						onErrors: _onErrors()
-					}))
-				}
-				resolve(webpackDevCof)
-			})

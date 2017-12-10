@@ -1,7 +1,6 @@
 /**
  * 
- * @authors Your Name (you@example.org)
- * @date    2017-11-29 22:48:28
+ * @authors hgcoder (you@example.org)
  * @version $Id$
  */
 
@@ -19,15 +18,15 @@ module.exports = {
 	},
 	module: {
     rules: [
-    	{
-        test: /\.js$/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: [resolve('src')],
-        options: {
-          formatter: require('eslint-friendly-formatter')
-        }
-      },
+    	// {
+     //    test: /\.js$/,
+     //    loader: 'eslint-loader',
+     //    enforce: 'pre',
+     //    include: [resolve('src')],
+     //    options: {
+     //      formatter: require('eslint-friendly-formatter')
+     //    }
+     //  },
       {
         test: /\.js$/,
         // exclude: /(node_modules|bower_components)/,
