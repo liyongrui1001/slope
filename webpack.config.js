@@ -6,27 +6,29 @@
 
 const webpack = require('webpack')
 const resolve = require('path').resolve;
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+process.env.NODE_ENV = 'production'
 module.exports = {
-	entry: {
-	  app: './index.js'
-	},
-	output: {
-		filename: '[name].[hash].js',
-		path: resolve(__dirname, 'build/')
-	},
-	module: {
+  entry: {
+    slope: './index.js',
+    test: './test/index.js'
+  },
+  output: {
+    filename: '[name].min.js',
+    path: resolve(__dirname, 'build/')
+  },
+  module: {
     rules: [
-    	// {
-     //    test: /\.js$/,
-     //    loader: 'eslint-loader',
-     //    enforce: 'pre',
-     //    include: [resolve('src')],
-     //    options: {
-     //      formatter: require('eslint-friendly-formatter')
-     //    }
-     //  },
+      // {
+      //    test: /\.js$/,
+      //    loader: 'eslint-loader',
+      //    enforce: 'pre',
+      //    include: [resolve('src')],
+      //    options: {
+      //      formatter: require('eslint-friendly-formatter')
+      //    }
+      //  },
       {
         test: /\.js$/,
         // exclude: /(node_modules|bower_components)/,
@@ -48,26 +50,24 @@ module.exports = {
             ]
           }
         }
-      },
-      // {
-      //   test: require.resolve('d3'),
-      //   use: [{
-      //     loader: 'expose-loader',
-      //     options: 'd3'
-      //   }]
-      // }
+      }
     ]
   },
   plugins: [
-  	new webpack.DefinePlugin({}),
-    new webpack.ProvidePlugin({
-        d3: "d3"
+    // 静态资源压缩
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      },
+      sourceMap: false,
+      parallel: true
     }),
-  	new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: true
+    // 去除重复引用
+    new webpack.DefinePlugin({
+      'process.env': {
+          NODE_ENV: '"production"'
+        }
     })
   ],
-  devtool: 'cheap-source-map'
+  devtool: false
 }

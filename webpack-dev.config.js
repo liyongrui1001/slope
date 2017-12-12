@@ -7,11 +7,55 @@
 
 const webpack = require('webpack')
 const webpackConfig = require('./webpack.config')
-const merge = require('webpack-merge')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const resolve = require('path').resolve;
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const notifier = require('node-notifier')
 const portfinder = require('portfinder')
-let webpackDevCof = merge(webpackConfig, {
+let webpackDevCof = {
+	entry: {
+		slope: './index.js',
+		test: './test/index.js'
+	},
+	output: {
+		filename: '[name].[hash].js',
+		path: resolve(__dirname, 'build/')
+	},
+	module: {
+		rules: [
+			// {
+			//    test: /\.js$/,
+			//    loader: 'eslint-loader',
+			//    enforce: 'pre',
+			//    include: [resolve('src')],
+			//    options: {
+			//      formatter: require('eslint-friendly-formatter')
+			//    }
+			//  },
+			{
+				test: /\.js$/,
+				// exclude: /(node_modules|bower_components)/,
+				use: {
+					loader: 'babel-loader',
+					options: {
+						babelrc: false,
+						plugins: [
+							'transform-remove-strict-mode'
+						],
+						presets: [
+							[
+								'es2015', {
+									loose: true,
+									modules: false
+								}
+							],
+							'stage-0'
+						]
+					}
+				}
+			}
+		]
+	},
 	devtool: 'source-map',
 	devServer: {
 		clientLogLevel: 'warning',
@@ -21,13 +65,17 @@ let webpackDevCof = merge(webpackConfig, {
 		open: false,
 		overlay: true,
 		publicPath: '/',
-		port: '8810',
 		quiet: true
 	},
 	plugins: [
-		new webpack.HotModuleReplacementPlugin()
+		new webpack.HotModuleReplacementPlugin(),
+		new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'index.html',
+      inject: true
+    })
 	]
-})
+}
 const _onErrors = function() {
 	return (severity, errors) => {
 		if (severity !== 'error') {
@@ -44,20 +92,19 @@ const _onErrors = function() {
 	}
 }
 module.exports = new Promise((resolve, reject) => {
-  portfinder.getPort((err, port) => {
-    if (err) {
-      reject(err)
-    } else {
-      webpackDevCof.devServer.port = port
-
-      // Add FriendlyErrorsPlugin
-      webpackDevCof.plugins.push(new FriendlyErrorsPlugin({
-        compilationSuccessInfo: {
-          messages: [`服务启动成功: http://localhost:${port}`],
-        },
-        onErrors: _onErrors()
-      }))
-      resolve(webpackDevCof)
-    }
-  })
+	portfinder.getPort((err, port) => {
+		if (err) {
+			reject(err)
+		} else {
+			webpackDevCof.devServer.port = port
+			// Add FriendlyErrorsPlugin
+			webpackDevCof.plugins.push(new FriendlyErrorsPlugin({
+				compilationSuccessInfo: {
+					messages: [`服务启动成功: http://localhost:${port}`],
+				},
+				onErrors: _onErrors()
+			}))
+			resolve(webpackDevCof)
+		}
+	})
 })

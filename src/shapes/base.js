@@ -4,6 +4,7 @@
  * 图形基类
  */
 import _ut from '../utils'
+import _theme from '../default'
 export default class Base {
   defaultConf () {
     return {
@@ -14,6 +15,7 @@ export default class Base {
   }
   constructor (conf) {
     this.conf = _ut.assign(this.defaultConf(), conf)
+    this._theme = _theme
     this._init()
   }
   _init () {
@@ -24,6 +26,6 @@ export default class Base {
       .attr('width', this.conf.width)
       .attr('height', this.conf.height)
       .append('g')
-      .attr('transform', 'translate(' + this.conf.width / 2 + ',' + (this.conf.height + 50) / 2 + ')')
+      .attr('transform', 'translate(' + this.conf.width / 2 + ',' + (this.conf.height) / 2 + ')')
   }
 }

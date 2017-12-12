@@ -20,7 +20,7 @@ export default class commonArc extends Base {
   constructor (props) {
     super(props)
     this._dt = props.data
-    this.color = props.color || ['#acdafd', '#dcb364']
+    this.color = props.color || this._theme._color2
     this.variedConf = props.variedConf || false
     this.lineConf = props.lineConf || {}
     this.draw()
@@ -43,7 +43,7 @@ export default class commonArc extends Base {
       .append('g')
       .append('path')
       .attr('d', arc1)
-      .attr('stroke', '#ff0000')
+      .attr('stroke', '#fff')
       .attr('stroke-width', '2')
       .attr('fill', 'none')
     for (let i = 0; i < this._dt.length; i++) {
@@ -56,17 +56,16 @@ export default class commonArc extends Base {
         return item.value
       })(this._dt[i])
       
-      let arc2GBox = this.svg.append('g').attr('class', 'arc2GBox')
+      let arc2GBox = this.svg.append('g')
 
       // 线路径设置
       let canvas = d3.path()
       // 饼图绘制
       arc2GBox
-        .selectAll('.arc2Path')
+        .selectAll('path')
         .data(_PieData)
         .enter()
         .append('path')
-        .classed('arc2Path', true)
         .attr('d', arc2)
         .attr('stroke', 'none')
         .attr('fill', (d) => {
@@ -98,9 +97,6 @@ export default class commonArc extends Base {
             } else if(i == 1) {
               endX = -endX
             }
-            // if (addProperty.offset && addProperty.offset.inversion) {
-              
-            // }
             context.moveTo(c[0], c[1])
             // 设置线转折点
             if (addProperty.offset && addProperty.offset.lineToPointer) {
@@ -110,6 +106,7 @@ export default class commonArc extends Base {
             context.lineTo(endX, endY)
           }
           drawPath(canvas)
+
           arc2GBox.append('path')
             .attr('d', canvas.toString())
             .attr('stroke-width', '1px')
@@ -123,18 +120,20 @@ export default class commonArc extends Base {
             .attr('fill', '#95c6ed')
             // 文案
           let textOffset = 0
-          if (addProperty.offset && addProperty.offset.textLocation === 'right') {
-            // textOffset = ( endX+addProperty.offset.endX || endX) + 95;
-            textOffset = endX + 95
+          if (i == 1 ) {
+            textOffset = endX + 16 //字体离线终点的位置
           } else {
-            textOffset = endX
+            textOffset = endX - 60
           }
           arc2GBox.append('text')
             .attr('transform', function () {
               return 'translate(' + (textOffset) + ',' + endY + ')'
             })
             .html(function () {
-              return '<tspan font-size="20" x=-80 y=5 fill="#95c6ed">' + item.data.time.substring(0, 4) + '</tspan>' + '<tspan x=-80 y=30  font-size="20">' + (item.data.name || item.data.areaName) + ' ' + item.data.ratio + item.data.unitName + '</tspan>'
+              return '<tspan font-size="20" fill="#95c6ed">' + item.data.time.substring(0, 4) + '</tspan>' 
+              + '<tspan x= 0 y=25 font-size="20">' 
+              + (item.data.name || item.data.areaName) 
+              + ' ' + item.data.ratio + item.data.unitName + '</tspan>'
             })
             .attr('font-size', 30)
             .attr('fill', '#fff')
@@ -143,9 +142,9 @@ export default class commonArc extends Base {
       } else {
         _PieData.map((item, index) => {
           let _offsetX = _this.variedConf.offsetX
-          if (item.data.time === 2016) {
-            _offsetX -= 750 // 左右区域间距
-          }
+          // if (item.data.time === 2016) {
+          //   _offsetX -= 750 // 左右区域间距
+          // }
           arc2GBox.append('g')
             .attr('transform', function () {
               return 'translate(10, -160)'
@@ -156,9 +155,9 @@ export default class commonArc extends Base {
             })
             .html(function () {
               if (index === 0) {
-                return '<tspan font-size="30" x=-80 y=-30 fill="#95c6ed">' + item.data.time + '</tspan>' + '<tspan x=-80 y=30  font-size="20">' + (item.data.name || item.data.areaName) + ' ' + item.data.ratio + item.data.unitName + '</tspan>'
+                return '<tspan font-size="30" x=-70 y=-30 fill="#95c6ed">' + item.data.time + '</tspan>' + '<tspan x=-80 y=30  font-size="20">' + (item.data.name || item.data.areaName) + ' ' + item.data.ratio + item.data.unitName + '</tspan>'
               } else {
-                return '<tspan font-size="30" x=-80 y=5 fill="#95c6ed"></tspan>' + '<tspan x=-80 y=30  font-size="20">' + (item.data.name || item.data.areaName) + ' ' + item.data.ratio + item.data.unitName + '</tspan>'
+                return '<tspan font-size="30" x=-70 y=5 fill="#95c6ed"></tspan>' + '<tspan x=-80 y=30  font-size="20">' + (item.data.name || item.data.areaName) + ' ' + item.data.ratio + item.data.unitName + '</tspan>'
               }
             })
             .attr('font-size', 30)
@@ -183,9 +182,9 @@ export default class commonArc extends Base {
       }
     }
     // 区域提示
-    return
-    let tipX = (this._w - 20) / -2
-    let tipY = (this.conf.height - 30) / -2
+
+    let tipX = (this.conf.width - 20) / -2
+    let tipY = (this.conf.height) / -2
     if (_this.variedConf) {
       tipY = tipY + 65
     }
@@ -216,7 +215,7 @@ export default class commonArc extends Base {
         return this.color[d.index]
       })
 
-    // arcTip.append('g')
+    arcTip.append('g')
       .attr('transform', function (d, i) {
         return 'translate(0,18)' // 字位置偏移
       })
