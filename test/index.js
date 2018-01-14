@@ -7,9 +7,8 @@
 import _store from './store'
 // 
  new SE.circle({
-  width: 650,
-  height: 300,
+
   data: _store.circles._dl2,
-  container: '#JcircleType1'
+  container: 'JcircleType1'
 
 })
