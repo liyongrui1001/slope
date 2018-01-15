@@ -4,7 +4,7 @@
  * 图形基类
  */
 import _ut from '../utils'
-import _theme from '../default'
+import theme from '../default'
 export default class Base {
   defaultConf () {
     return {
@@ -15,17 +15,17 @@ export default class Base {
   }
   constructor (conf) {
     this.conf = _ut.assign(this.defaultConf(), conf)
-    let dom = document.getElementById(this.conf.container)
+    this.dom = document.getElementById(this.conf.container)
     if (!this.conf.width) {
-      this.conf.width = dom.clientWidth
+      this.conf.width = this.dom.clientWidth
     } 
     if (!this.conf.height){
-      this.conf.height= dom.clientHeight
+      this.conf.height= this.dom.clientHeight
     }
-    this._theme = _theme
-    this._init()
+    this.theme = theme
+    // this.created()
   }
-  _init () {
+  created () {
     // 画布位置
     let _this = this
     this.svg = d3.select('#'+this.conf.container)
