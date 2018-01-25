@@ -12,48 +12,61 @@ const resolve = require('path').resolve;
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const notifier = require('node-notifier')
 const portfinder = require('portfinder')
+var isDev = true
+var hasValue = function(item) {
+	return item != null;
+};
 let webpackDevCof = {
 	entry: {
+		slopeUi: './slope-ui/App.js',
 		slope: './index.js',
-		test: './test/index.js'
 	},
 	output: {
-		filename: '[name].[hash].js',
+		filename: '[name].min.js',
 		path: resolve(__dirname, 'build/')
 	},
 	module: {
-		rules: [
-			// {
-			//    test: /\.js$/,
-			//    loader: 'eslint-loader',
-			//    enforce: 'pre',
-			//    include: [resolve('src')],
-			//    options: {
-			//      formatter: require('eslint-friendly-formatter')
-			//    }
-			//  },
-			{
-				test: /\.js$/,
-				// exclude: /(node_modules|bower_components)/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						babelrc: false,
-						plugins: [
-							'transform-remove-strict-mode'
-						],
-						presets: [
-							[
-								'es2015', {
-									loose: true,
-									modules: false
-								}
-							],
-							'stage-0'
-						]
-					}
+		rules: [{
+				test: /\.(js|jsx)$/,
+				include: resolve(__dirname, 'slope-ui'),
+				loader: 'babel-loader',
+				options: {
+					plugins: [
+						"transform-decorators-legacy",
+						//  按需加载 样式文件
+						["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }] 
+					],
+					presets: ["react","stage-0","es2015"],
+					compact: true
 				}
+			}, {
+				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+				loader: 'url-loader',
+				options: {
+					limit: 10000,
+					name: 'static/img/[name].[hash:8].[ext]',
+				}
+			}, {
+				test: /\.css$/,
+				use: ['style-loader', 'css-loader']
+			}, {
+				test: /\.less$/,
+				use: [
+					'style-loader', {
+						loader: 'css-loader',
+						options: {
+							importLoaders: 1
+						}
+					}, {
+						loader: 'less-loader',
+						options: {
+							strictMath: true,
+							noIeCompat: true
+						}
+					}
+				]
 			}
+
 		]
 	},
 	devtool: 'source-map',
@@ -61,7 +74,7 @@ let webpackDevCof = {
 		clientLogLevel: 'warning',
 		historyApiFallback: true,
 		hot: true,
-		host: 'localhost',
+		host: '0.0.0.0',
 		open: false,
 		overlay: true,
 		publicPath: '/',
@@ -70,10 +83,10 @@ let webpackDevCof = {
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
 		new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: true
-    })
+			filename: 'index.html',
+			template: 'index.html',
+			inject: true
+		})
 	]
 }
 const _onErrors = function() {
@@ -97,7 +110,6 @@ module.exports = new Promise((resolve, reject) => {
 			reject(err)
 		} else {
 			webpackDevCof.devServer.port = port
-			// Add FriendlyErrorsPlugin
 			webpackDevCof.plugins.push(new FriendlyErrorsPlugin({
 				compilationSuccessInfo: {
 					messages: [`服务启动成功: http://localhost:${port}`],

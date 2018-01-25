@@ -23,7 +23,7 @@ export default class Base {
       this.conf.height= this.dom.clientHeight
     }
     this.theme = theme
-    // this.created()
+    this.created()
   }
   created () {
     // 画布位置
@@ -32,7 +32,5 @@ export default class Base {
       .append('svg')
       .attr('width', this.conf.width)
       .attr('height', this.conf.height)
-      .append('g')
-      .attr('transform', 'translate(' + this.conf.width / 2 + ',' + (this.conf.height) / 2 + ')')
   }
 }
